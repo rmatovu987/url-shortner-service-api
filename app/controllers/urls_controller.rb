@@ -11,7 +11,7 @@ class UrlsController < ApplicationController
     @url = Url.new(url_params)
     @url.clicks = 0
     @url.user_id = current_user.id
-    @url.short_url = "http://localhost:3000/app/#{@url.generate_short_url}"
+    @url.short_url = "http://18.141.56.186:3000/app/#{@url.generate_short_url}"
     @url.original_url = @url.sanitize
     if @url.save
     else
