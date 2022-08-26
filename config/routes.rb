@@ -20,5 +20,5 @@ Rails.application.routes.draw do
 
   root 'home#index'
 
-  get '/app/:short_url', to: 'home#send_to_url'
+  get '/url/:short_url', to: 'home#send_to_url'
 end
