@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+
+  match '*all', controller: 'application', action: 'cors_preflight_check', via: [:options]
+
   get 'home/index'
   get 'home/send_to_url'
   resources :urls, only: %i[index new create]

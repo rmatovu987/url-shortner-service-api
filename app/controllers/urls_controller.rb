@@ -1,8 +1,6 @@
 class UrlsController < ApplicationController
   def index
-
     @urls = Url.where(user_id: current_user.id)
-    Rails.logger.info { @urls }
   end
 
   def new
@@ -12,6 +10,7 @@ class UrlsController < ApplicationController
   def create
     @url = Url.new(url_params)
     @url.clicks = 0
+    @url.user_id = current_user.id
     @url.short_url = "http://localhost:3000/app/#{@url.generate_short_url}"
     @url.original_url = @url.sanitize
     if @url.save
@@ -22,6 +21,6 @@ class UrlsController < ApplicationController
   end
 
   private def url_params
-    params.require(:url).permit(:name, :original_url, :user_id)
+    params.require(:url).permit(:name, :original_url)
   end
 end
