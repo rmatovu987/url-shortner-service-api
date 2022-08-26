@@ -1,7 +1,7 @@
 # config valid for current version and patch releases of Capistrano
 lock "~> 3.17.1"
 
-server '18.141.56.186', port: 3000, roles: [:web, :app, :db], primary: true
+server '18.141.56.186', roles: [:web, :app, :db], primary: true
 
 set :application, "url_shortener"
 set :repo_url, "https://github.com/rmatovu987/url-shortner-service-api.git"
