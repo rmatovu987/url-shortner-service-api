@@ -12,7 +12,7 @@ set :pty,             true
 set :use_sudo,        false
 set :stage,           :production
 set :deploy_via,      :remote_cache
-set :deploy_to,       "/home/#{fetch(:user)}/apps/#{fetch(:application)}"
+set :deploy_to,       "/home/#{fetch(:user)}/www/#{fetch(:application)}"
 
 # Default value for :linked_files is []
 append :linked_files, 'config/database.yml', 'config/master.key'
