@@ -90,6 +90,7 @@ GEM
       capistrano-bundler
       puma (>= 4.0, < 6.0)
     concurrent-ruby (1.1.10)
+    connection_pool (2.2.5)
     crass (1.0.6)
     database_cleaner (2.0.1)
       database_cleaner-active_record (~> 2.0.0)
@@ -125,6 +126,8 @@ GEM
     dry-core (0.8.1)
       concurrent-ruby (~> 1.0)
     erubi (1.11.0)
+    et-orbi (1.2.7)
+      tzinfo
     factory_bot (6.2.1)
       activesupport (>= 5.0.0)
     factory_bot_rails (6.2.0)
@@ -132,6 +135,11 @@ GEM
       railties (>= 5.0.0)
     faker (2.22.0)
       i18n (>= 1.8.11, < 2)
+    figaro (1.2.0)
+      thor (>= 0.14.0, < 2)
+    fugit (1.6.0)
+      et-orbi (~> 1, >= 1.2.7)
+      raabro (~> 1.4)
     globalid (1.0.0)
       activesupport (>= 5.0)
     i18n (1.12.0)
@@ -177,6 +185,7 @@ GEM
     pg (1.4.3)
     puma (4.3.12)
       nio4r (~> 2.0)
+    raabro (1.4.0)
     racc (1.6.0)
     rack (2.2.4)
     rack-cors (1.1.1)
@@ -210,6 +219,7 @@ GEM
       thor (~> 1.0)
       zeitwerk (~> 2.5)
     rake (13.0.6)
+    redis (4.8.0)
     reline (0.3.1)
       io-console (~> 0.5)
     responders (3.0.1)
@@ -234,6 +244,13 @@ GEM
     rspec-support (3.11.0)
     shoulda-matchers (4.5.1)
       activesupport (>= 4.2.0)
+    sidekiq (6.5.5)
+      connection_pool (>= 2.2.2)
+      rack (~> 2.0)
+      redis (>= 4.5.0)
+    sidekiq-cron (1.7.0)
+      fugit (~> 1)
+      sidekiq (>= 4.2.1)
     sshkit (1.21.2)
       net-scp (>= 1.1.2)
       net-ssh (>= 2.8.0)
@@ -271,6 +288,7 @@ DEPENDENCIES
   dotenv-rails
   factory_bot_rails (~> 6.1)
   faker
+  figaro
   jbuilder
   jwt
   pg (~> 1.1)
@@ -279,6 +297,8 @@ DEPENDENCIES
   rails (~> 7.0.3, >= 7.0.3.1)
   rspec-rails (~> 4.0, >= 4.0.2)
   shoulda-matchers (~> 4.5, >= 4.5.1)
+  sidekiq
+  sidekiq-cron
   tzinfo-data
 
 RUBY VERSION

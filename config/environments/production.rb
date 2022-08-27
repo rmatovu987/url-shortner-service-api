@@ -6,6 +6,16 @@ Rails.application.configure do
   # Code is not reloaded between requests.
   config.cache_classes = true
 
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    port: 587,
+    address: 'smtp.gmail.com',
+    user_name: ENV['SMTP_USER_NAME'],
+    password: ENV['SMTP_PASSWORD'],
+    authentication: :plain,
+    enable_starttls_auto: true
+  }
+
   config.secret_key_base = 'a4697ee2d822219437fb753e6d1c0b71789b49363333fed15c173a825b7f0b0e48457c60f095b4ebe0499dfaccaf4e12d6e598f2d250aa2df8cd42a5f673bed5'
 
   # Eager load code on boot. This eager loads most of Rails and
@@ -58,7 +68,7 @@ Rails.application.configure do
   # config.active_job.queue_name_prefix = "url_shortner_api_production"
 
   config.action_mailer.perform_caching = false
-  config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+  config.action_mailer.default_url_options = { host: 'https://urlfin.herokuapp.com' }
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
   # config.action_mailer.raise_delivery_errors = false

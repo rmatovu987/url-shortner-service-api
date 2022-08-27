@@ -1,0 +1,4 @@
+catfact_mailer_job:
+  cron: "0 */2 * * *"
+  class: "StatMailerJob"
+  queue: default
