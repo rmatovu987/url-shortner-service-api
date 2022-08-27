@@ -60,7 +60,9 @@ group :development do
   gem 'capistrano-rvm',     require: false
   gem 'capistrano-rails',   require: false
   gem 'capistrano-bundler', require: false
-  gem 'capistrano3-puma',   require: false
+  gem 'capistrano3-nginx', '~> 2.0'
+  gem 'capistrano-nvm', require: false
+  gem 'capistrano-passenger' #, '>= 0.2.1'
   gem 'rspec-rails', '~> 4.0', '>= 4.0.2'
 
   # Speed up commands on slow machines / big apps [https://github.com/rails/spring]

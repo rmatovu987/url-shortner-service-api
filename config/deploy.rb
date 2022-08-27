@@ -1,13 +1,11 @@
 # config valid for current version and patch releases of Capistrano
 lock "~> 3.17.1"
 
-server '18.141.56.186', roles: [:web, :app, :db], primary: true
+
 
 set :application, "url_shortener"
 set :repo_url, "https://github.com/rmatovu987/url-shortner-service-api.git"
 set :user,            'ubuntu'
-set :puma_threads,    [4, 16]
-set :puma_workers,    0
 
 # Don't change these unless you know what you're doing
 set :pty,             true
@@ -15,15 +13,37 @@ set :use_sudo,        false
 set :stage,           :production
 set :deploy_via,      :remote_cache
 set :deploy_to,       "/home/#{fetch(:user)}/apps/#{fetch(:application)}"
-set :puma_bind,       "unix://#{shared_path}/tmp/sockets/#{fetch(:application)}-puma.sock"
-set :puma_state,      "#{shared_path}/tmp/pids/puma.state"
-set :puma_pid,        "#{shared_path}/tmp/pids/puma.pid"
-set :puma_access_log, "#{release_path}/log/puma.error.log"
-set :puma_error_log,  "#{release_path}/log/puma.access.log"
-set :ssh_options,     { forward_agent: true, user: fetch(:user), keys: %w(~/.ssh/id_rsa.pub) }
-set :puma_preload_app, true
-set :puma_worker_timeout, nil
-set :puma_init_active_record, true  # Change to false when not using ActiveRecord
+
+# Default value for :linked_files is []
+append :linked_files, 'config/database.yml', 'config/master.key'
+
+# Default value for linked_dirs is []
+append :linked_dirs, 'log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'public/system', 'storage'
+
+# Default value for keep_releases is 5
+set :keep_releases, 5
+
+
+# Nvm/Node.JS
+set :nvm_type, :user # or :system, depends on your nvm setup
+set :nvm_node, 'v14.16.0'
+set :nvm_map_bins, %w[node npm yarn]
+set :yarn_flags, '--silent --no-progress'
+
+# # Passenger
+set :passenger_roles, :app
+set :passenger_restart_runner, :sequence
+set :passenger_restart_wait, 10
+set :passenger_restart_limit, 2
+set :passenger_restart_with_sudo, false
+set :passenger_environment_variables, { RAILS_ENV: 'production' }
+set :passenger_restart_command, 'passenger stop && passenger start --daemonize --address 127.0.0.1 --port 3000'
+set :passenger_restart_options, -> { "#{deploy_to}/current" }
+
+# Nginx
+set :nginx_roles, :web
+set :nginx_sudo_paths, []
+set :nginx_sudo_tasks, ['nginx:restart']
 
 ## Defaults:
 # set :scm,           :git
@@ -35,52 +55,21 @@ set :branch,        :main
 ## Linked Files & Directories (Default None):
 # set :linked_files, %w{config/database.yml}
 # set :linked_dirs,  %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
-
-namespace :puma do
-  desc 'Create Directories for Puma Pids and Socket'
-  task :make_dirs do
-    on roles(:app) do
-      execute "mkdir #{shared_path}/tmp/sockets -p"
-      execute "mkdir #{shared_path}/tmp/pids -p"
-    end
-  end
-
-  before :start, :make_dirs
-end
-
 namespace :deploy do
-  desc "Make sure local git is in sync with remote."
-  task :check_revision do
-    on roles(:app) do
-      unless `git rev-parse HEAD` == `git rev-parse origin/main`
-        puts "WARNING: HEAD is not the same as origin/main"
-        puts "Run `git push` to sync changes."
-        exit
+  task :yarn_build do
+    on roles fetch(:yarn_roles) do
+      within fetch(:yarn_target_path, release_path) do
+        execute fetch(:yarn_bin), 'install'
+        execute fetch(:yarn_bin), 'build'
       end
     end
   end
-
-  desc 'Initial Deploy'
-  task :initial do
-    on roles(:app) do
-      before 'deploy:restart', 'puma:start'
-      invoke 'deploy'
-    end
-  end
-
   desc 'Restart application'
   task :restart do
-    on roles(:app), in: :sequence, wait: 5 do
-      invoke 'puma:restart'
+    on roles fetch(:nginx_roles) do
+      execute :sudo, '/etc/init.d/nginx restart'
     end
   end
-
-  before :starting,     :check_revision
-  after  :finishing,    :compile_assets
-  after  :finishing,    :cleanup
-  after  :finishing,    :restart
+  before 'symlink:release', :yarn_build
+  after :finishing, :restart
 end
-
-# ps aux | grep puma    # Get puma pid
-# kill -s SIGUSR2 pid   # Restart puma
-# kill -s SIGTERM pid   # Stop puma
