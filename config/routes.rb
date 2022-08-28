@@ -14,12 +14,13 @@ Rails.application.routes.draw do
   scope :api, defaults: { format: :json } do
     devise_for :users,
                controllers: {
+                 registrations: 'users/registrations',
                  sessions: 'sessions'
                },
                path_names: { sign_in: :login }
 
     devise_scope :user do
-      post '/users/sign_up' => 'devise/registrations#create'
+      post '/users/sign_up' => 'users/registrations#create'
     end
 
     resource :user, only: %i[show update]

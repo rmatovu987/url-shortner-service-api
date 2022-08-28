@@ -185,6 +185,8 @@ GEM
       racc (~> 1.4)
     orm_adapter (0.5.0)
     pg (1.4.3)
+    puma (5.6.5)
+      nio4r (~> 2.0)
     raabro (1.4.0)
     racc (1.6.0)
     rack (2.2.4)
@@ -294,6 +296,7 @@ DEPENDENCIES
   jbuilder
   jwt
   pg (~> 1.1)
+  puma (~> 5.2)
   rack-cors
   rails (~> 7.0.3, >= 7.0.3.1)
   rspec-rails (~> 4.0, >= 4.0.2)

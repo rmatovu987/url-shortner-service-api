@@ -2,6 +2,7 @@ class Url < ApplicationRecord
   belongs_to :user
 
   validates :original_url, presence: true, length: { minimum: 30 }
+  validates :name, presence: true
 
   before_create :generate_short_url, :sanitize
 

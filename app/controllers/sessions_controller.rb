@@ -4,12 +4,13 @@ class SessionsController < Devise::SessionsController
 
     if user && user.valid_password?(sign_in_params[:password])
       @current_user = user
+      render json: { user: user, token: user.generate_jwt, message: 'User logged in!'}, status: 200
     else
-      render json: { errors: { 'email or password' => ['is invalid'] } }, status: :unprocessable_entity
+      render json: { errors: ['Invalid Credentials'] }, status: 404
     end
   end
 
   def destroy
-    render json: { status: :ok, message: 'Signed out' }
+    render json: { status: 200, message: 'Signed out' }
   end
 end

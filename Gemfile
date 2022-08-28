@@ -64,6 +64,8 @@ group :development do
   gem 'capistrano-nvm', require: false
   gem 'capistrano-passenger' #, '>= 0.2.1'
   gem 'rspec-rails', '~> 4.0', '>= 4.0.2'
+  # gem 'puma', '~> 5.2'
+
 
   # Speed up commands on slow machines / big apps [https://github.com/rails/spring]
   # gem "spring"

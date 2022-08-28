@@ -11,6 +11,12 @@ class ApplicationController < ActionController::API
 
   private
 
+  def render_unprocessable_entity_response(invalid)
+    render json: { errors: invalid.record.errors }, status: :unprocessable_entity
+  end
+
+  private
+
   def configure_permitted_parameters
     devise_parameter_sanitizer.permit(:sign_up, keys: [:firstname, :lastname])
   end
